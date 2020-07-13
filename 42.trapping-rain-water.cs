@@ -12,6 +12,7 @@ public class Solution
 {
     public int Trap(int[] height) 
     {
+        /*
         //brute force
         int res = 0;
         int l = 0; 
@@ -62,7 +63,15 @@ public class Solution
                 l = r;
                 r = l + 1;
             }
-        }
+        }*/
+
+        //DP
+        int[] l = new int[height.Length];
+        int[] r = new int[height.Length];
+        int res = 0;
+        for (int i = 0; i < height.Length; i++) l[i] = i == 0? height[i]:Math.Max(l[i - 1], height[i]);
+        for (int i = height.Length - 1; i >= 0; i--) r[i] = i == height.Length - 1? height[i]:Math.Max(r[i + 1],height[i]);
+        for (int i = 0; i < height.Length; i++) res += Math.Min(l[i],r[i]) - height[i];
 
         return res;
     }
