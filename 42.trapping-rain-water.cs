@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Internal;
 using System;
 using System.Reflection.Metadata;
@@ -13,7 +14,7 @@ public class Solution
     public int Trap(int[] height) 
     {
         /*
-        //brute force
+        //brute force space O(1)  time O(n^2)
         int res = 0;
         int l = 0; 
         int r = 1;
@@ -65,13 +66,37 @@ public class Solution
             }
         }*/
 
-        //DP
+        /*
+        //DP space O(n)  time O(n)
         int[] l = new int[height.Length];
         int[] r = new int[height.Length];
         int res = 0;
         for (int i = 0; i < height.Length; i++) l[i] = i == 0? height[i]:Math.Max(l[i - 1], height[i]);
         for (int i = height.Length - 1; i >= 0; i--) r[i] = i == height.Length - 1? height[i]:Math.Max(r[i + 1],height[i]);
         for (int i = 0; i < height.Length; i++) res += Math.Min(l[i],r[i]) - height[i];
+        */
+
+        //Two Pointer
+        //l starts from 0 and r starts from the end of the array, when left less than right left pointer move 
+        //to right, when right less than left, move right to left
+        if (height.Length < 3) return 0;
+        int l = 0, r = height.Length  - 1, maxl = height[l], maxr = height[r], res = 0;
+        while (l < r)
+        {
+            if (height[l] <= height[r]) 
+            {
+                if (height[l] > maxl) maxl = height[l];
+                res += maxl - height[l];
+                l++;
+            }
+            else 
+            {
+                if (height[r] > maxr) maxr = height[r];
+                res += maxr - height[r];
+                r--;
+            }
+            //[2,0,4,0,2]
+        }
 
         return res;
     }
