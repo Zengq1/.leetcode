@@ -50,7 +50,7 @@ public class Solution
         //start to loop each line using sorteddictionary to store the current height. 
         Dictionary<int,int> dic = new Dictionary<int, int>();
         
-          //set pre x to recorde the previous x to prevent the edge case where the end point x the same and height keep decreasing
+        //set pre x to recorde the previous x to prevent the edge case where the end point x the same and height keep decreasing
         //it's also use to prevent when two building are right next to each other
         int preX = 0;
         int preH = 0;
