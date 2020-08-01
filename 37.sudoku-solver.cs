@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 public class Solution 
 {
     //hold the list of possible number in the dictionary
-    Dictionary<int,List<int>> possible;//[1][1] is 22, [2][4] is 35
+    Dictionary<int,bool[]> possible;//[1][1] is 22, [2][4] is 35
     
     //array to hold which number was seen before
     bool[] seenNum;
@@ -20,11 +20,19 @@ public class Solution
     public void SolveSudoku(char[][] board) 
     {
         this.board = board;
-        possible = new Dictionary<char[][],List<int>>();
+        possible = new Dictionary<int,bool[]>();
         seenNum = new bool[9];
         for (int i = 0; i < 9; i++) seenNum[i] = false;
 
-
+        //pre scan 
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                if (char[i][j] != '.') continue;
+                else GetPossibleNum(i,j);
+            }
+        }
     }
 
 
