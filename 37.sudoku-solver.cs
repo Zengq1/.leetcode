@@ -1,3 +1,5 @@
+using System.Data.SqlTypes;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 /*
@@ -9,72 +11,66 @@ using System.Runtime.CompilerServices;
 // @lc code=start
 public class Solution 
 {
-    //hold the list of possible number in the dictionary
-    Dictionary<int,bool[]> possible;//[1][1] is 22, [2][4] is 35, the value is the 9 digits , if valid or not
-    
-    //array to hold which number was seen before
-    bool[] seenNum;
-
+    char[] NUM = new char[]{'1','2','3','4','5','6','7','8','9'};
     char[][] board;    
     
     public void SolveSudoku(char[][] board) 
     {
         this.board = board;
-        possible = new Dictionary<int,bool[]>();
-        seenNum = new bool[9];
-        for (int i = 0; i < 9; i++) seenNum[i] = false;
+        CheckPossibleSolution(0,0);
+    }
 
-        //pre scan 
-        for (int i = 0; i < 9; i++)
+    private bool CheckPossibleSolution(int r, int c)
+    { 
+        if (r == 9) return true;
+        if (c == 9) return CheckPossibleSolution(r + 1,0);
+
+        if (board[r][c] != '.') return CheckPossibleSolution(r,c + 1);
+        else
         {
-            for (int j = 0; j < 9; j++)
+            foreach (char n in NUM)
             {
-                if (char[i][j] != '.') continue;
-                else GetPossibleNum(i,j);
+                if (CheckValid(r,c,n))
+                {
+                    board[r][c] = n;
+                    if (CheckPossibleSolution(r,c + 1)) return true;
+                    board[r][c] = '.';
+                }
             }
         }
+        return false;
     }
 
 
     
 
-    //method to scan row and column to get possible number for each cell
-    private void GetPossibleNum(int r, int c)
+    //method to scan row and column to get possible number for the target cell cell
+    private bool CheckValid(int r, int c,char curNum)
     {
         //check row
         for (int col = 0; col < 9; col++)
         {
-            if (board[r][col] != '.') seenNum[board[r][col]] = true;
+            if (board[r][col] == curNum) return false;
         }
 
         //check col
         for (int row = 0; row < 9; row++)
         {
-            if (board[row][c] != '.') seenNum[board[row][c]] = true;
+            if (board[row][c] == curNum) return false;
         }
 
-        //check sub box
-        int rB = 0; int cB = 0;
-
-        if (r >5) rB = 6;
-        else if (r > 2) rB = 3;
-        if (c > 5) cB = 6;
-        else if (c > 2) cB = 3;
+        int rB = (r/3) * 3;
+        int cB = (c/3) * 3;
 
         for (int row = rB; row < rB + 3; row++)
         {
             for (int col = cB; col < cB + 3; col++)
             {
-                if (board[row][col] != '.') seenNum[board[row][col]] = true;
+                if (board[row][col] == curNum) return false;
             }
         }
 
-        int curIndex = (r + 1) * 10 + (c + 1);
-        for (int i = 0; i < 9; i ++)
-        {
-            if (seenNum[i] == false) possible[curIndex].Add(i + 1);
-            else seenNum[i] = false; //set true back to false for the next column
-        }
+        return true;
     }
 }
 // @lc code=end
