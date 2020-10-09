@@ -1,3 +1,4 @@
+using System;
 /*
  * @lc app=leetcode id=17 lang=csharp
  *
@@ -5,54 +6,34 @@
  */
 
 // @lc code=start
-public class Solution {
+public class Solution 
+{
+    IList<string> res;
     public IList<string> LetterCombinations(string digits) 
     {
-        IList<string> res = new List<string>();
+        res = new List<string>();
         
         if (digits.Length < 1) return res;
-       
-        int count = 0;
-        int totalNum = 1;
+        GetCombination(0,"",digits);
+        return res;
+    }
 
-        //create list to record index
-        List<int> digitIndex = new List<int>();
-
-        //get the total number of element and insert 0 for each digit in the digits strign
-        foreach (char c in digits)
+    private void GetCombination(int curInd, string curS, string digits)
+    {
+        if (curInd == digits.Length)
         {
-            totalNum *= GetChar(c).Count;
-            digitIndex.Add(0);
+            res.Add(curS);
+            return;
         }
+        List<char> curCharList = GetChar(digits[curInd]);
+        StringBuilder sb = new StringBuilder(curS);
 
-        StringBuilder sb = new StringBuilder();
-
-        while (totalNum > 0)
+        foreach (char c in curCharList)
         {
-            string tempS = "";
-            for (int i = 0; i < digits.Length; i++)
-            {
-                tempS += GetChar(digits[i])[digitIndex[i]];
-            }
-            sb.Append(tempS);
-
-            digitIndex[digitIndex.Count - 1] ++;
-            if (digitIndex[digitIndex.Count - 1] == GetChar(digits[digits.Length-1]).Count)
-            {
-                for (int i = digitIndex.Count - 1; i > 0; i--)
-                {
-                    if (i < digitIndex.Count && digitIndex[i] == GetChar(digits[i]).Count)
-                    {
-                        digitIndex = 0;
-                        digitIndex[i - 1]++;
-                    }
-                    else break;
-                }
-            }
-            
-            totalNum--;
+            sb.Append(c);
+            GetCombination(curInd + 1, sb.ToString(), digits);
+            sb.Length--;
         }
-        return res;  
     }
     
     private List<char> GetChar (char c)
@@ -70,7 +51,7 @@ public class Solution {
             case '6':
                 return new List<char>() {'m','n','o'};
             case '7':
-                return new List<char>() {'p','r','r','s'};     
+                return new List<char>() {'p','q','r','s'};     
             case '8':
                 return new List<char>() {'t','u','v'};      
             case '9':
